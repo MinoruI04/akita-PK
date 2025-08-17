@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実践PK/PDアプローチ インフォグラフィック</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: A single-column, narrative-driven structure is used to guide the user through a learning journey. It starts by deconstructing common PK/PD misconceptions (Vd, albumin), transitions to the core message of holistic patient care ("wood for the trees"), presents a real-world failure case study to ground the theory in practice, and concludes with the expert's cyclical approach to TDM. This linear flow is optimal for educational content, building complexity progressively. -->
+    <!-- Visualization & Content Choices: Case Study Data -> Goal: Change -> Viz/Method: Line Chart (Chart.js/Canvas) showing VCM concentration over time. -> Justification: A line chart is the most effective way to visualize the dramatic and dangerous spike in drug concentration detailed in the case study, making the data instantly understandable. NO SVG/Mermaid. | TDM Cycle -> Goal: Organize -> Viz/Method: Flowchart created with structured HTML/CSS (Tailwind) -> Justification: Clearly illustrates the iterative, cyclical nature of the expert TDM process without using prohibited libraries. NO SVG/Mermaid. | PK Misconceptions -> Goal: Compare -> Viz/Method: Two-column layout with Unicode icons -> Justification: Provides a clear, side-by-side comparison of misconceptions versus reality. NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #F8F9FA;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+    </style>
+</head>
+<body class="text-[#343A40]">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#45B7D1]">実践PK/PDアプローチ</h1>
+            <p class="mt-2 text-lg md:text-xl text-gray-600">数字の向こう側にいる患者さんを見るために</p>
+        </header>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">PKパラメータの変動をどう読むか？</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-[#F7B801]">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">よくある誤解① Vd増大</h3>
+                    <p class="mb-2 text-gray-500"><strong>❌ 誤解:</strong> Vd増大 ＝ 血中濃度低下 ＝ とにかく増量が必要</p>
+                    <p class="text-gray-700"><strong>✅ 真実:</strong> Vdは薬の**「立ち上がり（初期濃度）」**に影響しますが、持続投与での**「定常状態濃度」**には影響しません。一律な増量は過量投与のリスクがあります。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-[#F7B801]">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">よくある誤解② 低アルブミン血症</h3>
+                    <p class="mb-2 text-gray-500"><strong>❌ 誤解:</strong> 低アルブミン血症 ＝ 遊離形↑ ＝ 効果・副作用↑</p>
+                    <p class="text-gray-700"><strong>✅ 真実:</strong> 持続投与の定常状態では、クリアランスも上昇するため、**総血中濃度は低下**し、**遊離形濃度は理論上不変**となります。総濃度だけでの判断は危険です。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16 bg-[#45B7D1] text-white rounded-lg shadow-2xl p-8">
+            <h2 class="text-3xl font-bold text-center mb-6">木を見て森も見る<br>- 理論と実践の架け橋 -</h2>
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <p class="text-lg">私たちが追う血中濃度は、あくまで臨床効果を予測するための**代替指標（サロゲートマーカー）**に過ぎません。</p>
+                <p class="text-xl font-bold">どんなに完璧な投与設計も、薬剤選択や治療の適応が間違っていれば意味がありません。</p>
+                <p class="text-lg">PK/PDという専門性の高い**「木」**を見るだけでなく、患者さんの薬物治療全体という**「森」**を見ること。それが、私たちに求められています。</p>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2 text-[#FF6B6B]">TDMの大失敗事例</h2>
+            <p class="text-center text-gray-600 mb-8">なぜ濃度は予測を裏切り、急上昇したのか？</p>
+            <div class="bg-white rounded-lg shadow-xl p-6">
+                <div class="mb-6">
+                    <p><strong>症例:</strong> 25歳女性(50kg)。ICU入室6日目に循環動態が不安定となり、バンコマイシン(VCM)を開始。</p>
+                    <p class="text-sm text-gray-500">Day 6の腎機能はeGFR 145, CCr 119と良好に見えた。</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="vcmChart"></canvas>
+                </div>
+                <div class="mt-6 bg-red-50 p-4 rounded-lg border-l-4 border-red-400">
+                    <h3 class="font-bold text-lg mb-2 text-red-800">何が起きていたのか？</h3>
+                    <p class="text-red-700">Day 7のVCM濃度(4.4)とシスタチンC(125)だけを見れば、腎機能は良好と判断され、増量は妥当に見えました。しかし、その裏で**尿量が低下し始めていた**のです。</p>
+                    <p class="mt-2 font-semibold text-red-800">この**「僅かな尿量の変化」**こそが、急速な腎機能悪化の重要なサインでした。私たちは、リアルタイムの臨床所見より、過去の検査データとシミュレーションを優先してしまったのです。</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-bold text-center mb-8 text-[#4ECDC4]">エキスパートのアプローチ<br>- TDMは「予測と修正」のサイクルである -</h2>
+            <div class="max-w-md mx-auto">
+                <div class="space-y-4 text-center">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-2xl font-bold text-[#4ECDC4]">① 予測</p>
+                        <p class="text-gray-600">未来の臓器機能を予測し、投与計画を立てる</p>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-400">↓</div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-2xl font-bold text-[#4ECDC4]">② 投与 & ③ 実測</p>
+                        <p class="text-gray-600">計画に基づき投与し、血中濃度を測定する</p>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-400">↓</div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <p class="text-2xl font-bold text-[#4ECDC4]">④ 評価・修正 → ①へ</p>
+                        <p class="text-gray-600">予測と実測の差からパラメータを見直し、次の予測へ</p>
+                    </div>
+                </div>
+            </div>
+             <p class="text-center mt-8 text-lg max-w-3xl mx-auto">TDMの本質は、単に濃度を測ることではなく、このサイクルを粘り強く繰り返し、患者個々の状態に近づけていくプロセスそのものです。</p>
+        </section>
+
+    </div>
+
+    <script>
+        const ctx = document.getElementById('vcmChart').getContext('2d');
+        const vcmData = [
+            { x: new Date('2025-08-07T06:00:00').valueOf(), y: 4.4 },
+            { x: new Date('2025-08-08T06:00:00').valueOf(), y: 71.0 },
+            { x: new Date('2025-08-09T06:00:00').valueOf(), y: 82.1 },
+            { x: new Date('2025-08-10T06:00:00').valueOf(), y: 42.3 },
+            { x: new Date('2025-08-11T06:00:00').valueOf(), y: 28.0 }
+        ];
+
+        const vcmChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'VCM血中濃度 (mg/L)',
+                    data: vcmData,
+                    borderColor: '#FF6B6B',
+                    backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                    borderWidth: 3,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#FF6B6B',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            tooltipFormat: 'yyyy/MM/dd HH:mm',
+                            displayFormats: {
+                                day: 'MM/dd'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: '日付'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'VCM濃度 (mg/L)'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return new Date(item.parsed.x).toLocaleString('ja-JP');
+                                }
+                            }
+                        }
+                    },
+                    annotation: {
+                        annotations: {
+                            targetRange: {
+                                type: 'box',
+                                yMin: 15,
+                                yMax: 20,
+                                backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                                borderColor: 'rgba(78, 205, 196, 0.3)',
+                                borderWidth: 1,
+                            },
+                            targetLabel: {
+                                type: 'label',
+                                xValue: vcmData[1].x,
+                                yValue: 17.5,
+                                content: ['目標トラフ範囲'],
+                                font: {
+                                    size: 12
+                                },
+                                color: '#4ECDC4',
+                                position: 'start'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
